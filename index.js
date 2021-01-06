@@ -1,27 +1,27 @@
 require('dotenv').config();
-import express, { static } from 'express';
+var express = require('express');
 var app = express();
 const port = 3001;
 
 var app = express();
-app.use(static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 
-import { connect, Schema, model } from 'mongoose';
+var mongoose = require('mongoose');
 
-connect(process.env.DB_CONNECT, { useNewUrlParser: true,useUnifiedTopology: true }, () => {
+mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true,useUnifiedTopology: true }, () => {
   console.log("połączono z bazą mongo!");
   app.listen(port, () => console.log("Serwer pracuje na porcie: " + port));
   console.log("test serwera: http://localhost:" + port + "/hello");
   console.log("link do serwera: http://localhost:" + port + "/");
 });
 
-var schema = Schema({
+var schema = mongoose.Schema({
 	nazwa:{type:String, required:true},
 	zakonczone:{type:Boolean, default:false},
 	data:{type:Date, default:Date.now}
 }); 
 
-var task = model('myToDoList',schema);
+var task = mongoose.model('myToDoList',schema);
 
 // dodaj views
 app.set("view engine", "ejs");
@@ -32,13 +32,13 @@ app.get('/', function(req, res) {
 	task.find({},(err, tasks)=>{
 		console.log('tasks GET');//,tasks);
 		res.render('myToDoView', {tasks:tasks || [] })
-		
+
 	});					  
 });
 
-import { urlencoded, json } from 'body-parser';
-app.use(urlencoded({ extended: true }));
-app.use(json())
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
 // dodaj
 app.post('/', function(req, res) {
@@ -73,7 +73,7 @@ app.post('/:id/zakoncz', function(req, res) {
 		{
 			tasks.zakonczone = true;
 			tasks.save();
-			setTimeout(() => {  console.log("wait!"); }, 3000);
+			setTimeout(() => {  console.log("wait!"); }, 2000);
 			res.redirect('/')
 			console.log('zakoncz');
 		});
