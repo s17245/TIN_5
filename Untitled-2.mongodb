@@ -1,0 +1,23 @@
+use('myToDoList');
+
+// drop
+db.myToDoList.drop();
+
+// insert 
+db.myToDoList.insertMany([
+  { 
+    'nazwa' : 'test1', 
+    'zakonczone' : false, 
+    'data' :  new Date('2014-03-01T08:00:00Z') 
+    },
+  { 
+    'nazwa' : 'test2', 
+    'zakonczone' : false,
+    'data' :  new Date('2014-03-01T08:00:00Z') 
+    },
+  { 
+    'nazwa' : 'test3', 
+    'zakonczone' : false, 
+    'data' :  new Date('2015-03-01T08:00:00Z') 
+    },
+]);
