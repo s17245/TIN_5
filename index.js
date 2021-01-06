@@ -1,29 +1,27 @@
 require('dotenv').config();
-var express = require('express');
+import express, { static } from 'express';
 var app = express();
 const port = 3001;
 
 var app = express();
-app.use(express.static(__dirname + '/public'));
-//app.use(express.favicon());
-//app.use(express.logger('dev'));
+app.use(static(__dirname + '/public'));
 
-var mongoose = require('mongoose');
+import { connect, Schema, model } from 'mongoose';
 
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true,useUnifiedTopology: true }, () => {
+connect(process.env.DB_CONNECT, { useNewUrlParser: true,useUnifiedTopology: true }, () => {
   console.log("połączono z bazą mongo!");
   app.listen(port, () => console.log("Serwer pracuje na porcie: " + port));
   console.log("test serwera: http://localhost:" + port + "/hello");
   console.log("link do serwera: http://localhost:" + port + "/");
 });
 
-var schema = mongoose.Schema({
+var schema = Schema({
 	nazwa:{type:String, required:true},
 	zakonczone:{type:Boolean, default:false},
 	data:{type:Date, default:Date.now}
 }); 
 
-var task = mongoose.model('myToDoList',schema);
+var task = model('myToDoList',schema);
 
 // dodaj views
 app.set("view engine", "ejs");
@@ -38,9 +36,9 @@ app.get('/', function(req, res) {
 	});					  
 });
 
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json())
+import { urlencoded, json } from 'body-parser';
+app.use(urlencoded({ extended: true }));
+app.use(json())
 
 // dodaj
 app.post('/', function(req, res) {
@@ -75,28 +73,13 @@ app.post('/:id/zakoncz', function(req, res) {
 		{
 			tasks.zakonczone = true;
 			tasks.save();
-			setTimeout(() => {  console.log("wait!"); }, 2000);
+			setTimeout(() => {  console.log("wait!"); }, 3000);
 			res.redirect('/')
 			console.log('zakoncz');
 		});
 });
 
-
-
-
-
-// app.set("view engine", "ejs");
-// app.set("views", __dirname + "/views");
-// app.set("view options", { layout: false } );
-
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json()); 
-
 //test serwera
 app.get('/hello', (req, res) => {
   res.send('hey hi hello!!!')
 })
-
-// app.listen(port, () => {
-//    console.log("apka nasłuchuje na porcie http://localhost:"+port+"/hello");
-// })

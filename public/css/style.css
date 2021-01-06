@@ -1,7 +1,7 @@
 body {
     background-color: darkgrey;
     color: wheat;
-
+    margin-left: 20px;
 }
 
 .dodaj {
@@ -29,12 +29,15 @@ body {
 
 #task {
     font-size: 20px;
-    color: white;
+    color: rgb(49, 49, 49);
 }
 .taskItem {
     border-style: outset;
+    background-color: rgb(192, 191, 191);
     border-radius: 25px;
+    border-spacing: 15px 30px;
     padding: 20px;
+    width: 300px;
 }
 
 .data {
